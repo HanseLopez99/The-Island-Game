@@ -1,0 +1,30 @@
+{
+  "name": "TheIsland",
+  "tree": {
+    "$className": "DataModel",
+    
+    "ServerScriptService": {
+      "$path": "src/ServerScriptService"
+    },
+    
+    "ReplicatedStorage": {
+      "$path": "src/ReplicatedStorage"
+    },
+    
+    "ServerStorage": {
+      "$path": "src/ServerStorage"
+    },
+    
+    "StarterPlayer": {
+      "$path": "src/StarterPlayer"
+    },
+    
+    "StarterGui": {
+      "$path": "src/StarterGui"
+    },
+    
+    "Workspace": {
+      "$path": "src/Workspace"
+    }
+  }
+}
