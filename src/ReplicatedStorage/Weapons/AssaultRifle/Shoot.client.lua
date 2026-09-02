@@ -15,6 +15,7 @@ local camera = workspace.CurrentCamera
 
 local tool = script.Parent
 local remote = tool:WaitForChild("FireEvent")
+local CombatState = require(ReplicatedStorage:WaitForChild("Modules"):WaitForChild("CombatState"))
 
 -- 🔥 recoil + muzzle
 local recoilEvent = ReplicatedStorage:WaitForChild("RecoilEvent")
@@ -28,18 +29,6 @@ local reloadEvent =
 
 local reloadSound =
 	tool:WaitForChild("AssaultRifleReloadSound")
-
---------------------------------------------------
--- 📱 MOBILE BUTTON
---------------------------------------------------
-
-local playerGui = player:WaitForChild("PlayerGui")
-
-local mobileGui =
-	playerGui:WaitForChild("MobileFireGui")
-
-local fireButton =
-	mobileGui:WaitForChild("FireButton")
 
 --------------------------------------------------
 -- 🔫 AMMO UI
@@ -71,6 +60,7 @@ local weaponName =
 --------------------------------------------------
 
 local FIRE_RATE = 0.08
+local RELOAD_ANIMATION_TIME = 1.1
 
 local firing = false
 local equipped = false
@@ -85,6 +75,7 @@ local currentAmmo = MAG_SIZE
 local reserveAmmo = 120
 
 local reloading = false
+local reloadVersion = 0
 
 --------------------------------------------------
 -- 🔫 UPDATE UI
@@ -158,6 +149,15 @@ end
 --------------------------------------------------
 
 local function startFiring()
+	if reloading then
+		reloadVersion += 1
+		reloading = false
+		CombatState.SetReloading(false)
+		if reloadSound.IsPlaying then
+			reloadSound:Stop()
+		end
+		updateAmmoUI()
+	end
 
 	if firing then
 		return
@@ -204,12 +204,16 @@ local function reload()
 	end
 
 	reloading = true
+	reloadVersion += 1
+	local thisReload = reloadVersion
+	CombatState.SetReloading(true)
 
 	--------------------------------------------------
 	-- 🔫 DETENER DISPARO
 	--------------------------------------------------
 
 	stopFiring()
+	CombatState.SetFiring(false)
 
 	--------------------------------------------------
 	-- 🔫 TEXTO RELOAD
@@ -233,7 +237,12 @@ local function reload()
 	-- 🔥 TIEMPO RELOAD
 	--------------------------------------------------
 
-	task.wait(reloadSound.TimeLength)
+	-- Keep the shared reload state alive long enough for the viewmodel
+	-- animation, even when the sound has no loaded TimeLength yet.
+	task.wait(math.max(reloadSound.TimeLength, RELOAD_ANIMATION_TIME))
+	if thisReload ~= reloadVersion or not reloading then
+		return
+	end
 
 	--------------------------------------------------
 	-- 🔫 CALCULAR BALAS NECESARIAS
@@ -250,6 +259,7 @@ local function reload()
 	reserveAmmo -= ammoToLoad
 
 	reloading = false
+	CombatState.SetReloading(false)
 
 	updateAmmoUI()
 end
@@ -273,8 +283,7 @@ UserInputService.InputBegan:Connect(function(input, gameProcessed)
 	--------------------------------------------------
 
 	if input.KeyCode == Enum.KeyCode.R then
-
-		reload()
+		CombatState.RequestReload()
 
 		return
 	end
@@ -284,33 +293,38 @@ UserInputService.InputBegan:Connect(function(input, gameProcessed)
 	--------------------------------------------------
 
 	if input.UserInputType == Enum.UserInputType.MouseButton1 then
-
-		startFiring()
+		CombatState.SetFiring(true)
 	end
 end)
 
 UserInputService.InputEnded:Connect(function(input)
 
 	if input.UserInputType == Enum.UserInputType.MouseButton1 then
-
-		stopFiring()
+		CombatState.SetFiring(false)
 	end
 end)
 
 --------------------------------------------------
--- 📱 MOBILE FIRE BUTTON
+-- COMBAT STATE COMMANDS (PC + MOBILE)
 --------------------------------------------------
 
-fireButton.MouseButton1Down:Connect(function()
+CombatState.Changed:Connect(function(name, value)
+	if not equipped then
+		return
+	end
+	if name == "Firing" then
+		if value then
+			startFiring()
+		else
+			stopFiring()
+		end
+	end
+end)
 
+CombatState.ReloadRequested:Connect(function()
 	if equipped then
-		startFiring()
+		reload()
 	end
-end)
-
-fireButton.MouseButton1Up:Connect(function()
-
-	stopFiring()
 end)
 
 --------------------------------------------------
@@ -325,23 +339,13 @@ tool.Equipped:Connect(function()
 
 	updateAmmoUI()
 
-	--------------------------------------------------
-	-- 📱 SOLO MÓVIL/TABLET
-	--------------------------------------------------
-
-	if UserInputService.TouchEnabled
-		and not UserInputService.KeyboardEnabled then
-
-		fireButton.Visible = true
-	end
 end)
 
 tool.Unequipped:Connect(function()
 
 	equipped = false
+	CombatState.SetFiring(false)
 	firing = false
-
-	fireButton.Visible = false
 
 	ammoGui.Enabled = false
 end)
@@ -349,7 +353,5 @@ end)
 --------------------------------------------------
 -- 🔥 INICIO
 --------------------------------------------------
-
-fireButton.Visible = false
 
 ammoGui.Enabled = false

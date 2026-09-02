@@ -13,18 +13,11 @@ local UserInputService = game:GetService("UserInputService")
 
 local player = Players.LocalPlayer
 local camera = workspace.CurrentCamera
+local CombatState = require(ReplicatedStorage:WaitForChild("Modules"):WaitForChild("CombatState"))
 
 local function developerToolsOpen()
 	return player:GetAttribute("DeveloperToolsOpen") == true
 end
-
---------------------------------------------------
--- MOBILE UI
---------------------------------------------------
-
-local playerGui = player:WaitForChild("PlayerGui")
-local mobileGui = playerGui:WaitForChild("MobileFireGui")
-local aimButton = mobileGui:WaitForChild("AimButton")
 
 local currentVM = nil
 local equippedTool = nil
@@ -38,18 +31,8 @@ local recoilOffset = CFrame.new()
 local recoilRotation = CFrame.Angles(0, 0, 0)
 local recoilEvent = ReplicatedStorage:WaitForChild("RecoilEvent")
 
+-- ADS is owned by CombatState. This controller only renders it.
 --------------------------------------------------
--- RELOAD
---------------------------------------------------
-
-local reloadEvent = ReplicatedStorage:WaitForChild("ReloadEvent")
-local reloadingVM = false
-
---------------------------------------------------
--- ADS
---------------------------------------------------
-
-local aiming = false
 
 --------------------------------------------------
 -- VIEWMODEL POSITIONS
@@ -87,42 +70,22 @@ UserInputService.InputBegan:Connect(function(input, gameProcessed)
 	end
 
 	if input.UserInputType == Enum.UserInputType.MouseButton2 then
-		aiming = true
+		CombatState.SetAiming(true)
 	end
 end)
 
 UserInputService.InputEnded:Connect(function(input)
 	if developerToolsOpen() then
-		aiming = false
+		CombatState.Reset()
 		return
 	end
 
 	if input.UserInputType == Enum.UserInputType.MouseButton2 then
-		aiming = false
+		if not CombatState.ADSLocked then
+			CombatState.SetAiming(false)
+		end
 	end
 end)
-
---------------------------------------------------
--- ADS MOBILE
---------------------------------------------------
-
-aimButton.MouseButton1Down:Connect(function()
-	if developerToolsOpen() then
-		return
-	end
-
-	aiming = true
-end)
-
-aimButton.MouseButton1Up:Connect(function()
-	aiming = false
-end)
-
-if UserInputService.TouchEnabled and not UserInputService.KeyboardEnabled then
-	aimButton.Visible = true
-else
-	aimButton.Visible = false
-end
 
 --------------------------------------------------
 -- ENDGAME
@@ -138,7 +101,7 @@ end)
 --------------------------------------------------
 
 local function applyRecoil()
-	if aiming then
+	if CombatState.Aiming then
 		recoilOffset = CFrame.new(0, 0, 0.04)
 		recoilRotation = CFrame.Angles(
 			math.rad(-0.4),
@@ -181,21 +144,6 @@ recoilEvent.Event:Connect(function()
 end)
 
 --------------------------------------------------
--- RELOAD ANIMATION EVENT
---------------------------------------------------
-
-reloadEvent.Event:Connect(function()
-	if developerToolsOpen() then
-		return
-	end
-
-	reloadingVM = true
-	task.delay(1.1, function()
-		reloadingVM = false
-	end)
-end)
-
---------------------------------------------------
 -- CREATE VIEWMODEL
 --------------------------------------------------
 
@@ -219,9 +167,6 @@ local function equipViewModel(tool)
 		realHandle.LocalTransparencyModifier = 1
 	end
 
-	if UserInputService.TouchEnabled and not UserInputService.KeyboardEnabled then
-		aimButton.Visible = true
-	end
 end
 
 --------------------------------------------------
@@ -242,7 +187,10 @@ local function unequipViewModel()
 	end
 
 	equippedTool = nil
-	aimButton.Visible = false
+	CombatState.SetFiring(false)
+	if not CombatState.ADSLocked then
+		CombatState.SetAiming(false)
+	end
 end
 
 --------------------------------------------------
@@ -252,6 +200,7 @@ end
 local function setupCharacter(char)
 	endgameOpen = false
 	player.CameraMode = Enum.CameraMode.LockFirstPerson
+	CombatState.Reset()
 	unequipViewModel()
 
 	char.ChildAdded:Connect(function(child)
@@ -265,6 +214,15 @@ local function setupCharacter(char)
 			unequipViewModel()
 		end
 	end)
+
+	-- The tool may already be equipped before CharacterAdded/ChildAdded hooks
+	-- finish connecting after a respawn.
+	for _, child in ipairs(char:GetChildren()) do
+		if child:IsA("Tool") and child.Name == "AssaultRifle" then
+			equipViewModel(child)
+			break
+		end
+	end
 end
 
 player.CharacterAdded:Connect(function(char)
@@ -286,8 +244,7 @@ RunService.RenderStepped:Connect(function()
 	--------------------------------------------------
 
 	if developerToolsOpen() then
-		aiming = false
-		reloadingVM = false
+		CombatState.Reset()
 
 		UserInputService.MouseBehavior = Enum.MouseBehavior.Default
 		UserInputService.MouseIconEnabled = true
@@ -326,7 +283,7 @@ RunService.RenderStepped:Connect(function()
 	-- RELOAD ANIMATION
 	--------------------------------------------------
 
-	if reloadingVM then
+	if CombatState.Reloading then
 		currentOffset = currentOffset:Lerp(
 			hipOffset
 				* CFrame.new(0.4, -0.5, 0.5)
@@ -340,9 +297,11 @@ RunService.RenderStepped:Connect(function()
 		-- ADS TRANSITION
 		--------------------------------------------------
 
-	elseif aiming then
+	elseif CombatState.Aiming then
 		currentOffset = currentOffset:Lerp(adsOffset, 0.15)
 		camera.FieldOfView = camera.FieldOfView + (50 - camera.FieldOfView) * 0.15
+		local positionReady = (currentOffset.Position - adsOffset.Position).Magnitude < 0.025
+		CombatState.SetADSReady(positionReady)
 
 		--------------------------------------------------
 		-- HIPFIRE
@@ -351,6 +310,7 @@ RunService.RenderStepped:Connect(function()
 	else
 		currentOffset = currentOffset:Lerp(hipOffset, 0.15)
 		camera.FieldOfView = camera.FieldOfView + (70 - camera.FieldOfView) * 0.15
+		CombatState.SetADSReady(false)
 	end
 
 	--------------------------------------------------

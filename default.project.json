@@ -4,27 +4,37 @@
     "$className": "DataModel",
     
     "ServerScriptService": {
-      "$path": "src/ServerScriptService"
+      "$path": "src/ServerScriptService",
+      "$ignoreUnknownInstances": true
     },
     
     "ReplicatedStorage": {
-      "$path": "src/ReplicatedStorage"
+      "$path": "src/ReplicatedStorage",
+      "$ignoreUnknownInstances": true
     },
     
     "ServerStorage": {
-      "$path": "src/ServerStorage"
+      "$path": "src/ServerStorage",
+      "$ignoreUnknownInstances": true
     },
     
     "StarterPlayer": {
-      "$path": "src/StarterPlayer"
+      "$ignoreUnknownInstances": true,
+      "StarterPlayerScripts": {
+        "$className": "StarterPlayerScripts",
+        "$path": "src/StarterPlayer/StarterPlayerScripts",
+        "$ignoreUnknownInstances": true
+      }
     },
     
     "StarterGui": {
-      "$path": "src/StarterGui"
+      "$path": "src/StarterGui",
+      "$ignoreUnknownInstances": true
     },
     
     "Workspace": {
-      "$path": "src/Workspace"
+      "$path": "src/Workspace",
+      "$ignoreUnknownInstances": true
     }
   }
 }

@@ -1,0 +1,206 @@
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+local player = Players.LocalPlayer
+local playerGui = player:WaitForChild("PlayerGui")
+local mobileGui = playerGui:WaitForChild("MobileFireGui")
+local fireButton = mobileGui:WaitForChild("FireButton")
+local aimButton = mobileGui:WaitForChild("AimButton")
+local reloadButton = playerGui:FindFirstChild("ReloadButton", true)
+local CombatState = require(ReplicatedStorage:WaitForChild("Modules"):WaitForChild("CombatState"))
+
+-- Studio's device emulator can report KeyboardEnabled=true because the host
+-- computer has a keyboard. TouchEnabled is the reliable mobile/emulator flag.
+local mobileOnly = UserInputService.TouchEnabled
+local fireHeld = false
+local fireToken = 0
+
+local function blocked()
+	return player:GetAttribute("DeveloperToolsOpen") == true
+end
+
+local function updateVisibility()
+	local character = player.Character
+	local equipped = character and character:FindFirstChild("AssaultRifle") ~= nil
+	fireButton.Visible = mobileOnly and equipped
+	aimButton.Visible = mobileOnly and equipped
+	if reloadButton and reloadButton:IsA("GuiObject") then
+		reloadButton.Visible = mobileOnly and equipped
+	end
+end
+
+local function waitForADS(token)
+	while fireHeld and token == fireToken and not blocked() do
+		if CombatState.ADSLocked or CombatState.ADSReady then
+			CombatState.SetFiring(true)
+			return
+		end
+		RunService.RenderStepped:Wait()
+	end
+end
+
+fireButton.InputBegan:Connect(function(input)
+	if not mobileOnly or blocked() or input.UserInputType ~= Enum.UserInputType.Touch then
+		return
+	end
+	fireHeld = true
+	fireToken += 1
+	local token = fireToken
+	if CombatState.ADSLocked then
+		CombatState.SetFiring(true)
+		return
+	end
+	CombatState.SetAiming(true)
+	task.spawn(function()
+		waitForADS(token)
+	end)
+end)
+
+fireButton.InputEnded:Connect(function(input)
+	if input.UserInputType ~= Enum.UserInputType.Touch then
+		return
+	end
+	fireHeld = false
+	fireToken += 1
+	CombatState.SetFiring(false)
+	if not CombatState.ADSLocked then
+		CombatState.SetAiming(false)
+	end
+end)
+
+aimButton.Activated:Connect(function()
+	if mobileOnly and not blocked() then
+		CombatState.SetADSLocked(not CombatState.ADSLocked)
+	end
+end)
+
+local function connectReloadButton(button)
+	if not button or button:GetAttribute("CombatReloadConnected") then
+		return
+	end
+	button:SetAttribute("CombatReloadConnected", true)
+	button.Activated:Connect(function()
+		if not blocked() then
+			CombatState.RequestReload()
+		end
+	end)
+	button.InputBegan:Connect(function(input)
+		if not blocked()
+			and (input.UserInputType == Enum.UserInputType.Touch
+				or input.UserInputType == Enum.UserInputType.MouseButton1) then
+			CombatState.RequestReload()
+		end
+	end)
+end
+
+connectReloadButton(reloadButton)
+
+local function bindMobileGui(newGui)
+	if not newGui or newGui == mobileGui then
+		return
+	end
+
+	mobileGui = newGui
+	fireButton = mobileGui:WaitForChild("FireButton")
+	aimButton = mobileGui:WaitForChild("AimButton")
+	reloadButton = mobileGui:FindFirstChild("ReloadButton", true)
+
+	fireButton.InputBegan:Connect(function(input)
+		if not mobileOnly or blocked() or input.UserInputType ~= Enum.UserInputType.Touch then
+			return
+		end
+		fireHeld = true
+		fireToken += 1
+		local token = fireToken
+		if CombatState.ADSLocked then
+			CombatState.SetFiring(true)
+			return
+		end
+		CombatState.SetAiming(true)
+		task.spawn(function()
+			waitForADS(token)
+		end)
+	end)
+
+	fireButton.InputEnded:Connect(function(input)
+		if input.UserInputType ~= Enum.UserInputType.Touch then
+			return
+		end
+		fireHeld = false
+		fireToken += 1
+		CombatState.SetFiring(false)
+		if not CombatState.ADSLocked then
+			CombatState.SetAiming(false)
+		end
+	end)
+
+	aimButton.Activated:Connect(function()
+		if mobileOnly and not blocked() then
+			CombatState.SetADSLocked(not CombatState.ADSLocked)
+		end
+	end)
+
+	connectReloadButton(reloadButton)
+	updateVisibility()
+end
+
+mobileGui.ChildAdded:Connect(function(child)
+	if child.Name == "ReloadButton" and child:IsA("GuiButton") then
+		reloadButton = child
+		connectReloadButton(child)
+		updateVisibility()
+	end
+end)
+
+mobileGui.DescendantAdded:Connect(function(child)
+	if child.Name == "ReloadButton" and child:IsA("GuiButton") then
+		reloadButton = child
+		connectReloadButton(child)
+		updateVisibility()
+	end
+end)
+
+playerGui.ChildAdded:Connect(function(child)
+	if child.Name == "MobileFireGui" then
+		bindMobileGui(child)
+	end
+end)
+
+playerGui.DescendantAdded:Connect(function(child)
+	if child.Name == "ReloadButton" and child:IsA("GuiButton") then
+		reloadButton = child
+		connectReloadButton(child)
+		updateVisibility()
+	end
+end)
+
+player:GetAttributeChangedSignal("DeveloperToolsOpen"):Connect(function()
+	if blocked() then
+		fireHeld = false
+		fireToken += 1
+		CombatState.Reset()
+	end
+	updateVisibility()
+end)
+
+local function hookCharacter(character)
+	fireHeld = false
+	fireToken += 1
+	CombatState.Reset()
+	local currentGui = player:WaitForChild("PlayerGui"):FindFirstChild("MobileFireGui")
+	if currentGui then
+		bindMobileGui(currentGui)
+	end
+	character.ChildAdded:Connect(updateVisibility)
+	character.ChildRemoved:Connect(updateVisibility)
+	updateVisibility()
+end
+
+player.CharacterAdded:Connect(hookCharacter)
+if player.Character then
+	hookCharacter(player.Character)
+end
+
+updateVisibility()
