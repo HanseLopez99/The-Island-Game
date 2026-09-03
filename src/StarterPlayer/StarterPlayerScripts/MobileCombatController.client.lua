@@ -11,6 +11,8 @@ local aimButton = mobileGui:WaitForChild("AimButton")
 local reloadButton = playerGui:FindFirstChild("ReloadButton", true)
 local CombatState = require(ReplicatedStorage:WaitForChild("Modules"):WaitForChild("CombatState"))
 
+print("[MobileCombat] Initial reloadButton found:", reloadButton and reloadButton:GetFullName() or "nil")
+
 -- Studio's device emulator can report KeyboardEnabled=true because the host
 -- computer has a keyboard. TouchEnabled is the reliable mobile/emulator flag.
 local mobileOnly = UserInputService.TouchEnabled
@@ -78,18 +80,14 @@ end)
 
 local function connectReloadButton(button)
 	if not button or button:GetAttribute("CombatReloadConnected") then
+		print("[MobileCombat] connectReloadButton skipped:", button and button.Name or "nil", "already connected:", button and button:GetAttribute("CombatReloadConnected"))
 		return
 	end
 	button:SetAttribute("CombatReloadConnected", true)
+	print("[MobileCombat] Connecting reload button:", button:GetFullName())
 	button.Activated:Connect(function()
+		print("[MobileCombat] Reload button Activated!")
 		if not blocked() then
-			CombatState.RequestReload()
-		end
-	end)
-	button.InputBegan:Connect(function(input)
-		if not blocked()
-			and (input.UserInputType == Enum.UserInputType.Touch
-				or input.UserInputType == Enum.UserInputType.MouseButton1) then
 			CombatState.RequestReload()
 		end
 	end)

@@ -6,19 +6,26 @@
         Disabled: false
     Exported: 2026-09-02 16:23:32
 ]]
+print("[Shoot] Script starting, parent:", script.Parent.Name, "location:", script:GetFullName())
+
 local Players = game:GetService("Players")
 local UserInputService = game:GetService("UserInputService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local player = Players.LocalPlayer
+local playerGui = player:WaitForChild("PlayerGui")
+print("[Shoot] Got playerGui")
 local camera = workspace.CurrentCamera
 
 local tool = script.Parent
 local remote = tool:WaitForChild("FireEvent")
+print("[Shoot] Got FireEvent")
 local CombatState = require(ReplicatedStorage:WaitForChild("Modules"):WaitForChild("CombatState"))
+print("[Shoot] Got CombatState")
 
 -- 🔥 recoil + muzzle
 local recoilEvent = ReplicatedStorage:WaitForChild("RecoilEvent")
+print("[Shoot] Got RecoilEvent")
 
 --------------------------------------------------
 -- 🔄 RELOAD
@@ -26,9 +33,11 @@ local recoilEvent = ReplicatedStorage:WaitForChild("RecoilEvent")
 
 local reloadEvent =
 	ReplicatedStorage:WaitForChild("ReloadEvent")
+print("[Shoot] Got ReloadEvent")
 
 local reloadSound =
 	tool:WaitForChild("AssaultRifleReloadSound")
+print("[Shoot] Got reloadSound")
 
 --------------------------------------------------
 -- 🔫 AMMO UI
@@ -36,6 +45,7 @@ local reloadSound =
 
 local ammoGui =
 	playerGui:WaitForChild("AmmoGui")
+print("[Shoot] Got AmmoGui")
 
 local container =
 	ammoGui:WaitForChild("WeaponInfoContainer")
@@ -54,6 +64,7 @@ local reserveLabel =
 
 local weaponName =
 	container:WaitForChild("WeaponName")
+print("[Shoot] Got all UI elements")
 
 --------------------------------------------------
 -- 🔫 CONFIG
@@ -190,16 +201,19 @@ end
 --------------------------------------------------
 
 local function reload()
+	print("[Shoot] reload() called, reloading:", reloading, "currentAmmo:", currentAmmo, "reserveAmmo:", reserveAmmo)
 
 	if reloading then
 		return
 	end
 
 	if currentAmmo >= MAG_SIZE then
+		print("[Shoot] Magazine full")
 		return
 	end
 
 	if reserveAmmo <= 0 then
+		print("[Shoot] No reserve ammo")
 		return
 	end
 
@@ -308,6 +322,8 @@ end)
 -- COMBAT STATE COMMANDS (PC + MOBILE)
 --------------------------------------------------
 
+print("[Shoot] About to connect ReloadRequested, tool:", tool.Name, "equipped:", equipped)
+
 CombatState.Changed:Connect(function(name, value)
 	if not equipped then
 		return
@@ -322,6 +338,7 @@ CombatState.Changed:Connect(function(name, value)
 end)
 
 CombatState.ReloadRequested:Connect(function()
+	print("[Shoot] ReloadRequested received, equipped:", equipped)
 	if equipped then
 		reload()
 	end
@@ -332,7 +349,7 @@ end)
 --------------------------------------------------
 
 tool.Equipped:Connect(function()
-
+	print("[Shoot] Tool equipped!")
 	equipped = true
 
 	ammoGui.Enabled = true
@@ -342,7 +359,7 @@ tool.Equipped:Connect(function()
 end)
 
 tool.Unequipped:Connect(function()
-
+	print("[Shoot] Tool unequipped!")
 	equipped = false
 	CombatState.SetFiring(false)
 	firing = false
@@ -355,3 +372,4 @@ end)
 --------------------------------------------------
 
 ammoGui.Enabled = false
+print("[Shoot] Script fully initialized, ready to use")
