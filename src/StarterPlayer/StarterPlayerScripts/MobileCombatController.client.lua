@@ -23,7 +23,9 @@ local fireTouch = nil
 
 -- A touch that begins over a GuiButton is normally consumed by the UI. Keep
 -- tracking that same touch so dragging the fire button can still rotate view.
-local CAMERA_TOUCH_SENSITIVITY = 0.12
+-- Separate sensitivity for dragging while the fire button is held. This is
+-- intentionally higher because the player is using a smaller touch area.
+local CAMERA_TOUCH_SENSITIVITY = 0.25
 
 local function trackFireTouch(input)
 	fireTouch = input
