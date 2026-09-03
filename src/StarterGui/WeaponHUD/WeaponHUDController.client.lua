@@ -1,11 +1,3 @@
---[[
-    WeaponHUDController (LocalScript)
-    Path: StarterGui → WeaponHUD
-    Parent: WeaponHUD
-    Properties:
-        Disabled: false
-    Exported: 2026-09-02 16:23:32
-]]
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 

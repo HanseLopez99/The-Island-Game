@@ -1,11 +1,3 @@
---[[
-    RadialProgressHandle (LocalScript)
-    Path: StarterGui → ZoneHUD → ZoneContainer → ZoneC → RadialHolder
-    Parent: RadialHolder
-    Properties:
-        Disabled: false
-    Exported: 2026-09-02 16:23:32
-]]
 local Config = require(script.Parent.Config)
 
 --------------------------------------------------

@@ -1,9 +1,3 @@
---[[
-    WeaponData (ModuleScript)
-    Path: ReplicatedStorage
-    Parent: ReplicatedStorage
-    Exported: 2026-09-02 16:23:32
-]]
 local WeaponData = {
 
 	AssaultRifle = {

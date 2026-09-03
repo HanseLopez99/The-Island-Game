@@ -1,12 +1,3 @@
---[[
-    RoundSystem (Script)
-    Path: ServerScriptService
-    Parent: ServerScriptService
-    Properties:
-        Disabled: false
-        RunContext: Enum.RunContext.Legacy
-    Exported: 2026-09-02 16:23:32
-]]
 local Players = game:GetService("Players")
 local Teams = game:GetService("Teams")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")

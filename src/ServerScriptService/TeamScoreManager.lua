@@ -1,9 +1,3 @@
---[[
-    TeamScoreManager (ModuleScript)
-    Path: ServerScriptService
-    Parent: ServerScriptService
-    Exported: 2026-09-02 16:23:32
-]]
 local module = {}
 
 local teamScores = {

@@ -1,9 +1,3 @@
---[[
-    Config (ModuleScript)
-    Path: StarterGui → ZoneHUD → ZoneContainer → ZoneB → RadialHolder
-    Parent: RadialHolder
-    Exported: 2026-09-02 16:23:32
-]]
 local S = {}
 
 S.Layers = {

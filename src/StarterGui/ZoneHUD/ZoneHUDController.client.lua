@@ -1,11 +1,3 @@
---[[
-    ZoneHUDController (LocalScript)
-    Path: StarterGui → ZoneHUD
-    Parent: ZoneHUD
-    Properties:
-        Disabled: false
-    Exported: 2026-09-02 16:23:32
-]]
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local remote =

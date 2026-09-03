@@ -1,11 +1,3 @@
---[[
-    Sprint (LocalScript)
-    Path: StarterPlayer → StarterPlayerScripts
-    Parent: StarterPlayerScripts
-    Properties:
-        Disabled: false
-    Exported: 2026-09-02 16:23:32
-]]
 local UserInputService = game:GetService("UserInputService")
 local ContextActionService = game:GetService("ContextActionService")
 local Players = game:GetService("Players")

@@ -1,0 +1,6 @@
+{
+  "properties": {
+    "ZIndexBehavior": "Sibling"
+  },
+  "className": "ScreenGui"
+}

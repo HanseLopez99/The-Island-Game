@@ -1,9 +1,3 @@
---[[
-    ViewportRenderer (ModuleScript)
-    Path: ReplicatedStorage → Modules
-    Parent: Modules
-    Exported: 2026-09-02 16:23:32
-]]
 -- ReplicatedStorage/Modules/ViewportRenderer
 -- Renders a Tool in a ViewportFrame without running its gameplay scripts.
 

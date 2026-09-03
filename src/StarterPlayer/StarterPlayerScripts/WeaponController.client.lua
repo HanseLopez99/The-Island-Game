@@ -1,11 +1,3 @@
---[[
-    WeaponController (LocalScript)
-    Path: StarterPlayer → StarterPlayerScripts
-    Parent: StarterPlayerScripts
-    Properties:
-        Disabled: false
-    Exported: 2026-09-02 16:23:32
-]]
 local Players = game:GetService("Players")
 local StarterGui = game:GetService("StarterGui")
 local UserInputService = game:GetService("UserInputService")

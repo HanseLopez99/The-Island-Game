@@ -1,11 +1,3 @@
---[[
-    LocalScript (LocalScript)
-    Path: StarterGui → HitmarkerGui
-    Parent: HitmarkerGui
-    Properties:
-        Disabled: false
-    Exported: 2026-09-02 16:23:32
-]]
 local TweenService = game:GetService("TweenService")
 
 local remote = game.ReplicatedStorage:WaitForChild("HitmarkerEvent")

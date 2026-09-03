@@ -1,12 +1,3 @@
---[[
-    Damage (Script)
-    Path: ReplicatedStorage → Weapons → AssaultRifle
-    Parent: AssaultRifle
-    Properties:
-        Disabled: false
-        RunContext: Enum.RunContext.Legacy
-    Exported: 2026-09-02 16:23:32
-]]
 local Debris = game:GetService("Debris")
 
 local tool = script.Parent

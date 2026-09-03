@@ -1,11 +1,3 @@
---[[
-    LocalScript (LocalScript)
-    Path: StarterGui → StatsDisplayGui → StatsFrame → RoundUI
-    Parent: RoundUI
-    Properties:
-        Disabled: false
-    Exported: 2026-09-02 16:23:32
-]]
 local Players = game:GetService("Players")
 
 local remote = game.ReplicatedStorage:WaitForChild("RoundTimeUpdate")

@@ -1,0 +1,48 @@
+{
+  "properties": {
+    "Size": {
+      "UDim2": [
+        [
+          0.42,
+          0
+        ],
+        [
+          0.08,
+          0
+        ]
+      ]
+    },
+    "BorderSizePixel": 0.0,
+    "Sink": {
+      "Enum": 0
+    },
+    "BorderColor3": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "AnchorPoint": [
+      0.5,
+      0.0
+    ],
+    "BackgroundColor3": [
+      1.0,
+      1.0,
+      1.0
+    ],
+    "Position": {
+      "UDim2": [
+        [
+          0.5,
+          0
+        ],
+        [
+          0.19,
+          0
+        ]
+      ]
+    },
+    "BackgroundTransparency": 1.0
+  },
+  "className": "Frame"
+}

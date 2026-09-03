@@ -1,12 +1,3 @@
---[[
-    Pickup (Script)
-    Path: ReplicatedStorage → Sword
-    Parent: Sword
-    Properties:
-        Disabled: false
-        RunContext: Enum.RunContext.Legacy
-    Exported: 2026-09-02 16:23:32
-]]
 local pickup = script.Parent
 local prompt = pickup:WaitForChild("ProximityPrompt")
 

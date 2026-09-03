@@ -1,0 +1,1 @@
+{"rotation":{"min":0,"mode":"Random","max":360,"fixed":0},"radius":55,"orientation":{"custom":{"y":1,"x":0,"z":0},"mode":"Normal"},"spacing":31,"scale":{"min":1,"mode":"None","fixed":1,"max":2},"ignoreWater":true,"ignoreInvisible":true,"wobble":{"min":0,"mode":"None","max":30}}

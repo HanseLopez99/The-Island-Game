@@ -1,9 +1,3 @@
---[[
-    ZoneData (ModuleScript)
-    Path: ReplicatedStorage
-    Parent: ReplicatedStorage
-    Exported: 2026-09-02 16:23:32
-]]
 local ZoneData = {
 
 	ZoneA = Vector3.new(-39.094, 23.293, 281.577),

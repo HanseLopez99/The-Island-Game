@@ -1,0 +1,8 @@
+{
+  "properties": {
+    "ScreenInsets": "DeviceSafeInsets",
+    "Enabled": false,
+    "ZIndexBehavior": "Sibling"
+  },
+  "className": "ScreenGui"
+}

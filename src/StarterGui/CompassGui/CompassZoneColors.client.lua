@@ -1,11 +1,3 @@
---[[
-    CompassZoneColors (LocalScript)
-    Path: StarterGui → CompassGui
-    Parent: CompassGui
-    Properties:
-        Disabled: false
-    Exported: 2026-09-02 16:23:32
-]]
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 --------------------------------------------------

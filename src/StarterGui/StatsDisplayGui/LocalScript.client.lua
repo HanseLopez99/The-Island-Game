@@ -1,11 +1,3 @@
---[[
-    LocalScript (LocalScript)
-    Path: StarterGui → StatsDisplayGui
-    Parent: StatsDisplayGui
-    Properties:
-        Disabled: false
-    Exported: 2026-09-02 16:23:32
-]]
 local remote = game.ReplicatedStorage:WaitForChild("TeamScoreUpdate")
 
 local gui = script.Parent

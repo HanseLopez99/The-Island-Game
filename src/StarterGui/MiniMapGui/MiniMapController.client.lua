@@ -1,11 +1,3 @@
---[[
-    MiniMapController (LocalScript)
-    Path: StarterGui → MiniMapGui
-    Parent: MiniMapGui
-    Properties:
-        Disabled: false
-    Exported: 2026-09-02 16:23:32
-]]
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")

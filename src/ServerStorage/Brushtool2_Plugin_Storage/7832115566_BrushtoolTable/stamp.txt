@@ -1,0 +1,1 @@
+{"currentlyStamping":"{7a9f17ac-d1c9-473c-a981-e8e5ac3ec39f}","ignoreInvisible":true,"ignoreWater":true}
