@@ -77,19 +77,6 @@ fireButton.InputBegan:Connect(function(input)
 	end)
 end)
 
-fireButton.InputEnded:Connect(function(input)
-	if input.UserInputType ~= Enum.UserInputType.Touch then
-		return
-	end
-	fireHeld = false
-	releaseFireTouch(input)
-	fireToken += 1
-	CombatState.SetFiring(false)
-	if not CombatState.ADSLocked then
-		CombatState.SetAiming(false)
-	end
-end)
-
 aimButton.Activated:Connect(function()
 	if mobileOnly and not blocked() then
 		CombatState.SetADSLocked(not CombatState.ADSLocked)
@@ -131,6 +118,23 @@ UserInputService.TouchMoved:Connect(function(input)
 		)
 end)
 
+-- InputEnded on a GuiButton fires when the finger leaves the button. The
+-- action must remain active while that same finger is still touching the
+-- screen, so stop only on the global TouchEnded event.
+UserInputService.TouchEnded:Connect(function(input)
+	if input ~= fireTouch then
+		return
+	end
+
+	fireHeld = false
+	releaseFireTouch(input)
+	fireToken += 1
+	CombatState.SetFiring(false)
+	if not CombatState.ADSLocked then
+		CombatState.SetAiming(false)
+	end
+end)
+
 local function bindMobileGui(newGui)
 	if not newGui or newGui == mobileGui then
 		return
@@ -157,19 +161,6 @@ local function bindMobileGui(newGui)
 		task.spawn(function()
 			waitForADS(token)
 		end)
-	end)
-
-	fireButton.InputEnded:Connect(function(input)
-		if input.UserInputType ~= Enum.UserInputType.Touch then
-			return
-		end
-		fireHeld = false
-		releaseFireTouch(input)
-		fireToken += 1
-		CombatState.SetFiring(false)
-		if not CombatState.ADSLocked then
-			CombatState.SetAiming(false)
-		end
 	end)
 
 	aimButton.Activated:Connect(function()
