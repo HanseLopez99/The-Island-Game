@@ -4,6 +4,7 @@ local UserInputService = game:GetService("UserInputService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local player = Players.LocalPlayer
+local camera = workspace.CurrentCamera
 local playerGui = player:WaitForChild("PlayerGui")
 local mobileGui = playerGui:WaitForChild("MobileFireGui")
 local fireButton = mobileGui:WaitForChild("FireButton")
@@ -18,6 +19,21 @@ print("[MobileCombat] Initial reloadButton found:", reloadButton and reloadButto
 local mobileOnly = UserInputService.TouchEnabled
 local fireHeld = false
 local fireToken = 0
+local fireTouch = nil
+
+-- A touch that begins over a GuiButton is normally consumed by the UI. Keep
+-- tracking that same touch so dragging the fire button can still rotate view.
+local CAMERA_TOUCH_SENSITIVITY = 0.12
+
+local function trackFireTouch(input)
+	fireTouch = input
+end
+
+local function releaseFireTouch(input)
+	if input == fireTouch then
+		fireTouch = nil
+	end
+end
 
 local function blocked()
 	return player:GetAttribute("DeveloperToolsOpen") == true
@@ -48,6 +64,7 @@ fireButton.InputBegan:Connect(function(input)
 		return
 	end
 	fireHeld = true
+	trackFireTouch(input)
 	fireToken += 1
 	local token = fireToken
 	if CombatState.ADSLocked then
@@ -65,6 +82,7 @@ fireButton.InputEnded:Connect(function(input)
 		return
 	end
 	fireHeld = false
+	releaseFireTouch(input)
 	fireToken += 1
 	CombatState.SetFiring(false)
 	if not CombatState.ADSLocked then
@@ -95,6 +113,24 @@ end
 
 connectReloadButton(reloadButton)
 
+UserInputService.TouchMoved:Connect(function(input)
+	if input ~= fireTouch or blocked() then
+		return
+	end
+
+	local delta = input.Delta
+	if delta.Magnitude <= 0 then
+		return
+	end
+
+	camera.CFrame = camera.CFrame
+		* CFrame.Angles(
+			math.rad(-delta.Y * CAMERA_TOUCH_SENSITIVITY),
+			math.rad(-delta.X * CAMERA_TOUCH_SENSITIVITY),
+			0
+		)
+end)
+
 local function bindMobileGui(newGui)
 	if not newGui or newGui == mobileGui then
 		return
@@ -110,6 +146,7 @@ local function bindMobileGui(newGui)
 			return
 		end
 		fireHeld = true
+		trackFireTouch(input)
 		fireToken += 1
 		local token = fireToken
 		if CombatState.ADSLocked then
@@ -127,6 +164,7 @@ local function bindMobileGui(newGui)
 			return
 		end
 		fireHeld = false
+		releaseFireTouch(input)
 		fireToken += 1
 		CombatState.SetFiring(false)
 		if not CombatState.ADSLocked then
