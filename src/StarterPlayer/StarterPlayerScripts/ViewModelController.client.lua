@@ -43,10 +43,13 @@ local hipOffset =
 	* CFrame.Angles(math.rad(0), math.rad(90), math.rad(0))
 
 local adsOffset =
-	CFrame.new(0, -0.89, -1.15)
-	* CFrame.Angles(math.rad(0), math.rad(90), math.rad(0))
+CFrame.new(0, -0.89, -1.15)
+* CFrame.Angles(math.rad(0), math.rad(90), math.rad(0))
 
 local currentOffset = hipOffset
+local NORMAL_FOV = 70
+local WALKING_FOV = 85
+local ADS_FOV = 50
 
 --------------------------------------------------
 -- CURSOR
@@ -291,7 +294,7 @@ RunService.RenderStepped:Connect(function()
 			0.12
 		)
 
-		camera.FieldOfView = camera.FieldOfView + (70 - camera.FieldOfView) * 0.15
+		camera.FieldOfView = camera.FieldOfView + (NORMAL_FOV - camera.FieldOfView) * 0.15
 
 		--------------------------------------------------
 		-- ADS TRANSITION
@@ -299,7 +302,7 @@ RunService.RenderStepped:Connect(function()
 
 	elseif CombatState.Aiming then
 		currentOffset = currentOffset:Lerp(adsOffset, 0.15)
-		camera.FieldOfView = camera.FieldOfView + (50 - camera.FieldOfView) * 0.15
+		camera.FieldOfView = camera.FieldOfView + (ADS_FOV - camera.FieldOfView) * 0.15
 		local positionReady = (currentOffset.Position - adsOffset.Position).Magnitude < 0.025
 		CombatState.SetADSReady(positionReady)
 
@@ -309,7 +312,11 @@ RunService.RenderStepped:Connect(function()
 
 	else
 		currentOffset = currentOffset:Lerp(hipOffset, 0.15)
-		camera.FieldOfView = camera.FieldOfView + (70 - camera.FieldOfView) * 0.15
+		local humanoid = player.Character and player.Character:FindFirstChildOfClass("Humanoid")
+		local targetFOV = humanoid and humanoid.MoveDirection.Magnitude > 0
+			and WALKING_FOV
+			or NORMAL_FOV
+		camera.FieldOfView = camera.FieldOfView + (targetFOV - camera.FieldOfView) * 0.15
 		CombatState.SetADSReady(false)
 	end
 

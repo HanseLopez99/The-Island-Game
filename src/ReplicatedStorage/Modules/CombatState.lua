@@ -47,7 +47,6 @@ function CombatState.SetReloading(value)
 end
 
 function CombatState.RequestReload()
-	print("[CombatState] RequestReload called")
 	reloadRequested:Fire()
 end
 

@@ -201,19 +201,15 @@ end
 --------------------------------------------------
 
 local function reload()
-	print("[Shoot] reload() called, reloading:", reloading, "currentAmmo:", currentAmmo, "reserveAmmo:", reserveAmmo)
-
 	if reloading then
 		return
 	end
 
 	if currentAmmo >= MAG_SIZE then
-		print("[Shoot] Magazine full")
 		return
 	end
 
 	if reserveAmmo <= 0 then
-		print("[Shoot] No reserve ammo")
 		return
 	end
 
@@ -338,7 +334,6 @@ CombatState.Changed:Connect(function(name, value)
 end)
 
 CombatState.ReloadRequested:Connect(function()
-	print("[Shoot] ReloadRequested received, equipped:", equipped)
 	if equipped then
 		reload()
 	end
