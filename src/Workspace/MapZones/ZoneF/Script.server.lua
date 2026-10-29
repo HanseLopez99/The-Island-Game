@@ -80,7 +80,9 @@ prompt.PromptButtonHoldBegan:Connect(function(player)
 					zone = zone.Name,
 					progress = 1,
 					state = "Captured",
-					color = owner
+					color = owner,
+					announce = true,
+					capturedBy = player.DisplayName
 				})
 
 				return

@@ -1,4 +1,5 @@
 local Debris = game:GetService("Debris")
+local Players = game:GetService("Players")
 
 local tool = script.Parent
 local remote = tool:WaitForChild("FireEvent")
@@ -6,6 +7,8 @@ local remote = tool:WaitForChild("FireEvent")
 -- 🔥 hitmarker
 local hitmarkerRemote =
 	game.ReplicatedStorage:WaitForChild("HitmarkerEvent")
+local killConfirmedRemote =
+	game.ReplicatedStorage:WaitForChild("KillConfirmedEvent")
 
 remote.OnServerEvent:Connect(function(player, origin, direction)
 
@@ -116,6 +119,12 @@ remote.OnServerEvent:Connect(function(player, origin, direction)
 									kills.Value += 1
 								end
 							end
+
+							killConfirmedRemote:FireClient(killer, {
+								targetName = Players:GetPlayerFromCharacter(hitCharacter)
+									and Players:GetPlayerFromCharacter(hitCharacter).DisplayName
+									or hitCharacter.Name,
+							})
 						end
 					end)
 				end

@@ -1,4 +1,5 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local TweenService = game:GetService("TweenService")
 
 local remote =
 	ReplicatedStorage:WaitForChild("ZoneUpdate")
@@ -20,6 +21,50 @@ local zones = {
 	ZoneF = container.ZoneF,
 
 }
+
+local announcementFadeTask
+local announcement = Instance.new("TextLabel")
+announcement.Name = "ZoneAnnouncement"
+announcement.AnchorPoint = Vector2.new(0.5, 0.5)
+announcement.Position = UDim2.fromScale(0.5, 0.3)
+announcement.Size = UDim2.fromOffset(520, 42)
+announcement.BackgroundTransparency = 1
+announcement.TextColor3 = Color3.fromRGB(255, 230, 90)
+announcement.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
+announcement.TextStrokeTransparency = 0.25
+announcement.Font = Enum.Font.GothamBold
+announcement.TextScaled = true
+announcement.TextTransparency = 1
+announcement.Visible = false
+announcement.ZIndex = 10
+announcement.Parent = script.Parent
+
+local function showZoneAnnouncement(data)
+	if announcementFadeTask then
+		task.cancel(announcementFadeTask)
+	end
+
+	local teamName = data.color == "Red" and "Red Team" or "Blue Team"
+	local playerName = data.capturedBy and (" • " .. data.capturedBy) or ""
+	announcement.Text = teamName .. playerName .. " captured " .. data.zone
+	announcement.TextColor3 = data.color == "Red"
+		and Color3.fromRGB(255, 100, 100)
+		or Color3.fromRGB(80, 190, 255)
+	announcement.Visible = true
+	announcement.TextTransparency = 0
+
+	announcementFadeTask = task.delay(2.8, function()
+		local tween = TweenService:Create(
+			announcement,
+			TweenInfo.new(0.5),
+			{ TextTransparency = 1 }
+		)
+		tween:Play()
+		tween.Completed:Connect(function()
+			announcement.Visible = false
+		end)
+	end)
+end
 
 --------------------------------------------------
 -- 🎨 COLORES
@@ -84,6 +129,10 @@ remote.OnClientEvent:Connect(function(data)
 
 	if not zone then
 		return
+	end
+
+	if data.announce and data.state == "Captured" then
+		showZoneAnnouncement(data)
 	end
 
 	--------------------------------------------------
