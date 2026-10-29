@@ -9,10 +9,8 @@ local playerGui = player:WaitForChild("PlayerGui")
 local mobileGui = playerGui:WaitForChild("MobileFireGui")
 local fireButton = mobileGui:WaitForChild("FireButton")
 local aimButton = mobileGui:WaitForChild("AimButton")
-local reloadButton = playerGui:FindFirstChild("ReloadButton", true)
+local reloadButton = mobileGui:FindFirstChild("ReloadButton", true)
 local CombatState = require(ReplicatedStorage:WaitForChild("Modules"):WaitForChild("CombatState"))
-
-print("[MobileCombat] Initial reloadButton found:", reloadButton and reloadButton:GetFullName() or "nil")
 
 -- Studio's device emulator can report KeyboardEnabled=true because the host
 -- computer has a keyboard. TouchEnabled is the reliable mobile/emulator flag.
