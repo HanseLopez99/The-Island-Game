@@ -9,6 +9,8 @@ local hitmarkerRemote =
 	game.ReplicatedStorage:WaitForChild("HitmarkerEvent")
 local killConfirmedRemote =
 	game.ReplicatedStorage:WaitForChild("KillConfirmedEvent")
+local killFeedRemote =
+	game.ReplicatedStorage:WaitForChild("KillFeedEvent")
 
 remote.OnServerEvent:Connect(function(player, origin, direction)
 
@@ -124,6 +126,14 @@ remote.OnServerEvent:Connect(function(player, origin, direction)
 								targetName = Players:GetPlayerFromCharacter(hitCharacter)
 									and Players:GetPlayerFromCharacter(hitCharacter).DisplayName
 									or hitCharacter.Name,
+							})
+
+							local targetPlayer = Players:GetPlayerFromCharacter(hitCharacter)
+							killFeedRemote:FireAllClients({
+								killerName = killer.DisplayName,
+								victimName = targetPlayer and targetPlayer.DisplayName or hitCharacter.Name,
+								killerTeam = killer.Team and killer.Team.Name or "Neutral",
+								victimTeam = targetPlayer and targetPlayer.Team and targetPlayer.Team.Name or "Neutral",
 							})
 						end
 					end)

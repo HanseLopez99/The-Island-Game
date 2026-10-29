@@ -1,6 +1,7 @@
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local TweenService = game:GetService("TweenService")
 
 local player = Players.LocalPlayer
 local camera = workspace.CurrentCamera
@@ -8,6 +9,117 @@ local camera = workspace.CurrentCamera
 local gui = script.Parent
 local miniMap = gui:WaitForChild("MiniMapFrame")
 local playerArrow = miniMap:WaitForChild("PlayerArrow")
+
+-- Set to false before publishing the game. This only creates local fake feed
+-- entries and does not affect kills, scores, or server gameplay.
+local SIMULATION_MODE = true
+local MAX_KILL_FEED_ENTRIES = 5
+local KILL_FEED_LIFETIME = 5
+
+local killFeed = Instance.new("Frame")
+killFeed.Name = "KillFeed"
+killFeed.Position = UDim2.new(0, 0, 1, 8)
+killFeed.Size = UDim2.new(1, 0, 0, 150)
+killFeed.BackgroundTransparency = 1
+killFeed.BorderSizePixel = 0
+killFeed.ZIndex = 20
+killFeed.Parent = miniMap
+
+local killFeedLayout = Instance.new("UIListLayout")
+killFeedLayout.SortOrder = Enum.SortOrder.LayoutOrder
+killFeedLayout.Padding = UDim.new(0, 4)
+killFeedLayout.Parent = killFeed
+
+local killFeedEntries = {}
+
+local function teamColor(teamName)
+	if teamName == "Red" then
+		return Color3.fromRGB(255, 90, 90)
+	elseif teamName == "Blue" then
+		return Color3.fromRGB(80, 190, 255)
+	end
+	return Color3.fromRGB(235, 235, 235)
+end
+
+local function removeOldestEntry()
+	local entry = table.remove(killFeedEntries, 1)
+	if entry and entry.Parent then
+		entry:Destroy()
+	end
+end
+
+local function addKillFeedEntry(data)
+	while #killFeedEntries >= MAX_KILL_FEED_ENTRIES do
+		removeOldestEntry()
+	end
+
+	local entry = Instance.new("TextLabel")
+	entry.Name = "KillEntry"
+	entry.Size = UDim2.new(1, 0, 0, 24)
+	entry.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+	entry.BackgroundTransparency = 0.35
+	entry.BorderSizePixel = 0
+	entry.Font = Enum.Font.GothamBold
+	entry.TextSize = 14
+	entry.TextScaled = false
+	entry.TextTruncate = Enum.TextTruncate.AtEnd
+	entry.TextWrapped = false
+	entry.TextXAlignment = Enum.TextXAlignment.Center
+	entry.TextColor3 = Color3.fromRGB(255, 255, 255)
+	entry.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
+	entry.TextStrokeTransparency = 0.35
+	entry.Text = string.format("%s  ›  %s", data.killerName or "Unknown", data.victimName or "Unknown")
+	entry.ZIndex = 21
+	entry.Parent = killFeed
+
+	local stroke = Instance.new("UIStroke")
+	stroke.Color = teamColor(data.killerTeam)
+	stroke.Thickness = 1
+	stroke.Transparency = 0.35
+	stroke.Parent = entry
+
+	table.insert(killFeedEntries, entry)
+
+	task.delay(KILL_FEED_LIFETIME, function()
+		if not entry.Parent then
+			return
+		end
+
+		local tween = TweenService:Create(
+			entry,
+			TweenInfo.new(0.4),
+			{ TextTransparency = 1, BackgroundTransparency = 1 }
+		)
+		tween:Play()
+		tween.Completed:Connect(function()
+			if entry.Parent then
+				entry:Destroy()
+			end
+		end)
+	end)
+end
+
+local killFeedRemote = ReplicatedStorage:WaitForChild("KillFeedEvent")
+killFeedRemote.OnClientEvent:Connect(addKillFeedEntry)
+
+if SIMULATION_MODE then
+	task.spawn(function()
+		local fakeKills = {
+			{ killerName = "Raven", victimName = "Ghost", killerTeam = "Blue" },
+			{ killerName = "Ghost", victimName = "Raven", killerTeam = "Red" },
+			{ killerName = "Nova", victimName = "Shadow", killerTeam = "Blue" },
+			{ killerName = "Shadow", victimName = "Nova", killerTeam = "Red" },
+		}
+
+		task.wait(2)
+		local index = 1
+		while SIMULATION_MODE and killFeed.Parent do
+			addKillFeedEntry(fakeKills[index])
+			index = index % #fakeKills + 1
+			task.wait(2.5)
+		end
+	end)
+end
 
 --------------------------------------------------
 -- 🏁 ZONE UPDATE
