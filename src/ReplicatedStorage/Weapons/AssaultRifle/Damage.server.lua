@@ -12,13 +12,48 @@ local killConfirmedRemote =
 local killFeedRemote =
 	game.ReplicatedStorage:WaitForChild("KillFeedEvent")
 
+local SHOT_INTERVAL = 0.075
+local MAX_ORIGIN_DISTANCE = 8
+local MAX_RAY_DISTANCE = 2000
+local lastShotAt = 0
+
 remote.OnServerEvent:Connect(function(player, origin, direction)
+	local now = os.clock()
+	if now - lastShotAt < SHOT_INTERVAL then
+		return
+	end
+
+	if typeof(origin) ~= "Vector3" or typeof(direction) ~= "Vector3" then
+		return
+	end
+
+	local character = player.Character
+	local attackerHumanoid = character and character:FindFirstChildOfClass("Humanoid")
+	local playerRoot = character and character:FindFirstChild("HumanoidRootPart")
+	local head = character and character:FindFirstChild("Head")
+
+	if tool.Parent ~= character
+		or not attackerHumanoid
+		or attackerHumanoid.Health <= 0
+		or not playerRoot
+		or not head
+		or direction.Magnitude < 1
+		or direction.Magnitude > MAX_RAY_DISTANCE
+	then
+		return
+	end
+
+	if (origin - head.Position).Magnitude > MAX_ORIGIN_DISTANCE then
+		return
+	end
+
+	lastShotAt = now
+	origin = head.Position
+	direction = direction.Unit * MAX_RAY_DISTANCE
 
 	--------------------------------------------------
 	-- 🔥 SONIDO GLOBAL
 	--------------------------------------------------
-
-	local character = player.Character
 
 	if character then
 
@@ -49,8 +84,7 @@ remote.OnServerEvent:Connect(function(player, origin, direction)
 	params.FilterType =
 		Enum.RaycastFilterType.Exclude
 
-	local result =
-		workspace:Raycast(origin, direction, params)
+	local result = workspace:Raycast(origin, direction, params)
 
 	if result then
 
@@ -70,6 +104,12 @@ remote.OnServerEvent:Connect(function(player, origin, direction)
 
 			if humanoid
 				and hitCharacter ~= player.Character then
+
+				local targetPlayer = Players:GetPlayerFromCharacter(hitCharacter)
+				if targetPlayer and player.Team and targetPlayer.Team
+					and player.Team == targetPlayer.Team then
+					return
+				end
 
 				--------------------------------------------------
 				-- 🔥 TAG DEL ATACANTE
