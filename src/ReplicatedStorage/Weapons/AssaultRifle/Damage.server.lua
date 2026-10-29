@@ -11,11 +11,66 @@ local killConfirmedRemote =
 	game.ReplicatedStorage:WaitForChild("KillConfirmedEvent")
 local killFeedRemote =
 	game.ReplicatedStorage:WaitForChild("KillFeedEvent")
+local reloadRequestRemote =
+	game.ReplicatedStorage:WaitForChild("WeaponReloadRequest")
 
 local SHOT_INTERVAL = 0.075
 local MAX_ORIGIN_DISTANCE = 8
 local MAX_RAY_DISTANCE = 2000
+local MAG_SIZE = 30
+local STARTING_RESERVE = 120
+local RELOAD_TIME = 1.1
 local lastShotAt = 0
+local serverAmmo = MAG_SIZE
+local serverReserveAmmo = STARTING_RESERVE
+local serverReloading = false
+local reloadToken = 0
+
+local function isEquipped(player)
+	local character = player.Character
+	local humanoid = character and character:FindFirstChildOfClass("Humanoid")
+	return tool.Parent == character and humanoid and humanoid.Health > 0
+end
+
+local function cancelServerReload()
+	reloadToken += 1
+	serverReloading = false
+end
+
+reloadRequestRemote.OnServerEvent:Connect(function(player, action)
+	if not isEquipped(player) then
+		return
+	end
+
+	if action == "cancel" then
+		cancelServerReload()
+		return
+	end
+
+	if action ~= "start"
+		or serverReloading
+		or serverAmmo >= MAG_SIZE
+		or serverReserveAmmo <= 0
+	then
+		return
+	end
+
+	serverReloading = true
+	reloadToken += 1
+	local currentToken = reloadToken
+
+	task.delay(RELOAD_TIME, function()
+		if currentToken ~= reloadToken or not serverReloading then
+			return
+		end
+
+		local needed = MAG_SIZE - serverAmmo
+		local amount = math.min(needed, serverReserveAmmo)
+		serverAmmo += amount
+		serverReserveAmmo -= amount
+		serverReloading = false
+	end)
+end)
 
 remote.OnServerEvent:Connect(function(player, origin, direction)
 	local now = os.clock()
@@ -47,7 +102,12 @@ remote.OnServerEvent:Connect(function(player, origin, direction)
 		return
 	end
 
+	if serverReloading or serverAmmo <= 0 then
+		return
+	end
+
 	lastShotAt = now
+	serverAmmo -= 1
 	origin = head.Position
 	direction = direction.Unit * MAX_RAY_DISTANCE
 

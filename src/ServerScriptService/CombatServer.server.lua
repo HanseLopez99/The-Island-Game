@@ -1,10 +1,27 @@
 local remote = game.ReplicatedStorage:WaitForChild("HitEvent")
+local lastHitAt = {}
+local HIT_INTERVAL = 0.1
 
 local DAMAGE = 25
 local KNOCKBACK_FORCE = 60
 
 remote.OnServerEvent:Connect(function(player, enemy)
-	print("Evento recibido", enemy)
+	local now = os.clock()
+	if now - (lastHitAt[player] or 0) < HIT_INTERVAL then
+		return
+	end
+
+	local character = player.Character
+	local attackerHumanoid = character and character:FindFirstChildOfClass("Humanoid")
+	if not character or not attackerHumanoid or attackerHumanoid.Health <= 0 then
+		return
+	end
+
+	if not character:FindFirstChildOfClass("Tool") then
+		return
+	end
+
+	lastHitAt[player] = now
 
 	if typeof(enemy) ~= "Instance" then return end
 	if not enemy:IsDescendantOf(workspace) then return end
@@ -13,8 +30,7 @@ remote.OnServerEvent:Connect(function(player, enemy)
 	local root = enemy:FindFirstChild("HumanoidRootPart")
 	local character = player.Character
 
-	if not humanoid or not root or not character then 
-		warn("Falta humanoid o root")
+	if not humanoid or not root or not character then
 		return 
 	end
 
@@ -22,8 +38,7 @@ remote.OnServerEvent:Connect(function(player, enemy)
 	if not playerRoot then return end
 
 	local distance = (playerRoot.Position - root.Position).Magnitude
-	if distance > 10 then 
-		warn("Muy lejos")
+	if distance > 10 then
 		return 
 	end
 
@@ -33,12 +48,9 @@ remote.OnServerEvent:Connect(function(player, enemy)
 	-- ❌ EVITAR FUEGO AMIGO
 	if enemyPlayer and player.Team and enemyPlayer.Team then
 		if player.Team == enemyPlayer.Team then
-			print("Fuego amigo bloqueado")
 			return
 		end
 	end
-
-	print("Aplicando daño")
 
 	-- 🔥 TAG DEL ATACANTE (REEMPLAZA EL ANTERIOR)
 	local oldTag = humanoid:FindFirstChild("creator")

@@ -33,6 +33,8 @@ print("[Shoot] Got RecoilEvent")
 
 local reloadEvent =
 	ReplicatedStorage:WaitForChild("ReloadEvent")
+local reloadRequestRemote =
+	ReplicatedStorage:WaitForChild("WeaponReloadRequest")
 print("[Shoot] Got ReloadEvent")
 
 local reloadSound =
@@ -164,6 +166,7 @@ local function startFiring()
 		reloadVersion += 1
 		reloading = false
 		CombatState.SetReloading(false)
+		reloadRequestRemote:FireServer("cancel")
 		if reloadSound.IsPlaying then
 			reloadSound:Stop()
 		end
@@ -217,6 +220,7 @@ local function reload()
 	reloadVersion += 1
 	local thisReload = reloadVersion
 	CombatState.SetReloading(true)
+	reloadRequestRemote:FireServer("start")
 
 	--------------------------------------------------
 	-- 🔫 DETENER DISPARO
