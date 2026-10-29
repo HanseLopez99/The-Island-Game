@@ -20,7 +20,7 @@ local killLabel = Instance.new("TextLabel")
 killLabel.Name = "KillConfirmation"
 killLabel.AnchorPoint = Vector2.new(0.5, 0.5)
 killLabel.Position = UDim2.fromScale(0.5, 0.62)
-killLabel.Size = UDim2.fromOffset(360, 42)
+killLabel.Size = UDim2.fromScale(0.32, 0.055)
 killLabel.BackgroundTransparency = 1
 killLabel.TextColor3 = Color3.fromRGB(255, 225, 90)
 killLabel.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
@@ -31,6 +31,11 @@ killLabel.TextTransparency = 1
 killLabel.Visible = false
 killLabel.ZIndex = 10
 killLabel.Parent = gui
+
+local killTextSize = Instance.new("UITextSizeConstraint")
+killTextSize.MinTextSize = 12
+killTextSize.MaxTextSize = 24
+killTextSize.Parent = killLabel
 
 --------------------------------------------------
 -- 🎯 HITMARKER

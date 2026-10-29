@@ -27,7 +27,7 @@ local announcement = Instance.new("TextLabel")
 announcement.Name = "ZoneAnnouncement"
 announcement.AnchorPoint = Vector2.new(0.5, 0.5)
 announcement.Position = UDim2.fromScale(0.5, 0.3)
-announcement.Size = UDim2.fromOffset(520, 42)
+announcement.Size = UDim2.fromScale(0.48, 0.055)
 announcement.BackgroundTransparency = 1
 announcement.TextColor3 = Color3.fromRGB(255, 230, 90)
 announcement.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
@@ -38,6 +38,11 @@ announcement.TextTransparency = 1
 announcement.Visible = false
 announcement.ZIndex = 10
 announcement.Parent = script.Parent
+
+local announcementTextSize = Instance.new("UITextSizeConstraint")
+announcementTextSize.MinTextSize = 12
+announcementTextSize.MaxTextSize = 24
+announcementTextSize.Parent = announcement
 
 local function showZoneAnnouncement(data)
 	if announcementFadeTask then

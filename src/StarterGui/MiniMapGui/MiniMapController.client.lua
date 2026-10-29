@@ -19,7 +19,7 @@ local KILL_FEED_LIFETIME = 5
 local killFeed = Instance.new("Frame")
 killFeed.Name = "KillFeed"
 killFeed.Position = UDim2.new(0, 0, 1, 8)
-killFeed.Size = UDim2.new(1, 0, 0, 150)
+killFeed.Size = UDim2.new(1, 0, 0.45, 0)
 killFeed.BackgroundTransparency = 1
 killFeed.BorderSizePixel = 0
 killFeed.ZIndex = 20
@@ -27,7 +27,7 @@ killFeed.Parent = miniMap
 
 local killFeedLayout = Instance.new("UIListLayout")
 killFeedLayout.SortOrder = Enum.SortOrder.LayoutOrder
-killFeedLayout.Padding = UDim.new(0, 4)
+killFeedLayout.Padding = UDim.new(0.02, 0)
 killFeedLayout.Parent = killFeed
 
 local killFeedEntries = {}
@@ -55,13 +55,12 @@ local function addKillFeedEntry(data)
 
 	local entry = Instance.new("TextLabel")
 	entry.Name = "KillEntry"
-	entry.Size = UDim2.new(1, 0, 0, 24)
+	entry.Size = UDim2.new(1, 0, 0.18, 0)
 	entry.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 	entry.BackgroundTransparency = 0.35
 	entry.BorderSizePixel = 0
 	entry.Font = Enum.Font.GothamBold
-	entry.TextSize = 14
-	entry.TextScaled = false
+	entry.TextScaled = true
 	entry.TextTruncate = Enum.TextTruncate.AtEnd
 	entry.TextWrapped = false
 	entry.TextXAlignment = Enum.TextXAlignment.Center
@@ -71,6 +70,11 @@ local function addKillFeedEntry(data)
 	entry.Text = string.format("%s  ›  %s", data.killerName or "Unknown", data.victimName or "Unknown")
 	entry.ZIndex = 21
 	entry.Parent = killFeed
+
+	local entryTextSize = Instance.new("UITextSizeConstraint")
+	entryTextSize.MinTextSize = 10
+	entryTextSize.MaxTextSize = 18
+	entryTextSize.Parent = entry
 
 	local stroke = Instance.new("UIStroke")
 	stroke.Color = teamColor(data.killerTeam)
