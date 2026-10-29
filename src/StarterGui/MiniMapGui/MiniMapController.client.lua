@@ -12,7 +12,7 @@ local playerArrow = miniMap:WaitForChild("PlayerArrow")
 
 -- Set to false before publishing the game. This only creates local fake feed
 -- entries and does not affect kills, scores, or server gameplay.
-local SIMULATION_MODE = true
+local SIMULATION_MODE = false
 local MAX_KILL_FEED_ENTRIES = 5
 local KILL_FEED_LIFETIME = 5
 
