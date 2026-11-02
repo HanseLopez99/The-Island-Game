@@ -7,8 +7,8 @@ Proyecto FPS multijugador de Roblox. El repositorio local se sincroniza mediante
 ## Estructura principal
 
 ```text
-default.project.json
-src/
+MatchPlace/default.project.json
+MatchPlace/src/
 ├── ReplicatedStorage/
 │   ├── Modules/
 │   │   ├── CombatState.lua
@@ -62,11 +62,12 @@ PlayerGui
 
 El respaldo local es `TheIsland.rbxl`. Para recuperar el MatchPlace se publicó ese archivo sobre el place existente `MatchPlace`, sin crear un place nuevo.
 
-Rojo debe conectarse únicamente al MatchPlace. Los servicios principales están configurados para conservar instancias que aún no están representadas en el repositorio, incluyendo Terrain, modelos del mapa, assets de Brushtool y objetos antiguos del HUD.
+Rojo debe conectarse al proyecto correspondiente: `MatchPlace/default.project.json` para el MatchPlace y `Lobby/default.project.json` para el Lobby. Los servicios principales del MatchPlace están configurados para conservar instancias que aún no están representadas en el repositorio, incluyendo Terrain, modelos del mapa, assets de Brushtool y objetos antiguos del HUD.
 
 ## Verificación mínima después de cambios
 
-1. Ejecutar `rojo build default.project.json`.
-2. Ejecutar `git diff --check`.
-3. En Studio, detener y reiniciar Play.
-4. Probar equipamiento, ADS antes y después de respawn, disparo PC/móvil y recarga.
+1. Ejecutar `rojo build MatchPlace/default.project.json`.
+2. Ejecutar `rojo build Lobby/default.project.json` si el cambio afecta al Lobby.
+3. Ejecutar `git diff --check`.
+4. En Studio, detener y reiniciar Play.
+5. Probar equipamiento, ADS antes y después de respawn, disparo PC/móvil y recarga.

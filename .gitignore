@@ -1,11 +1,13 @@
 # Rojo
 sourcemap.json
 
-# Roblox
+# Roblox place backups and temporary lock files
 *.rbxl
 *.rbxlx
-*.rbxm
-*.rbxmx
+*.rbxl.lock
+
+# Source models are intentionally tracked by Git.
+# Do not add a global *.rbxm or *.rbxmx ignore rule here.
 
 # OS
 .DS_Store

@@ -1,0 +1,230 @@
+{
+  "name": "TheIslandLobby",
+  "tree": {
+    "$className": "DataModel",
+    "Lighting": {
+      "$properties": {
+        "Ambient": [
+          0.27450981736183167,
+          0.27450981736183167,
+          0.27450981736183167
+        ],
+        "Brightness": 3.0,
+        "EnvironmentDiffuseScale": 1.0,
+        "EnvironmentSpecularScale": 1.0,
+        "FogColor": [
+          0.7529412508010864,
+          0.7529412508010864,
+          0.7529412508010864
+        ],
+        "GeographicLatitude": 0.0,
+        "GlobalShadows": true,
+        "OutdoorAmbient": [
+          0.27450981736183167,
+          0.27450981736183167,
+          0.27450981736183167
+        ],
+        "Outlines": false,
+        "PrioritizeLightingQuality": true,
+        "SerializedOverrides": {
+          "BinaryString": ""
+        },
+        "ShadowSoftness": 0.20000000298023224,
+        "Technology": "ShadowMap",
+        "TimeOfDay": "14:30:00"
+      },
+      "$path": "src/Lighting"
+    },
+    "MaterialService": {
+      "$properties": {
+        "SerializedOverrides": {
+          "BinaryString": ""
+        },
+        "Use2022MaterialsXml": true
+      },
+      "$path": "src/MaterialService"
+    },
+    "ReplicatedFirst": {
+      "$properties": {
+        "SerializedOverrides": {
+          "BinaryString": ""
+        }
+      },
+      "$path": "src/ReplicatedFirst"
+    },
+    "ReplicatedStorage": {
+      "$properties": {
+        "SerializedOverrides": {
+          "BinaryString": ""
+        }
+      },
+      "$path": "src/ReplicatedStorage"
+    },
+    "ServerScriptService": {
+      "$properties": {
+        "SerializedOverrides": {
+          "BinaryString": ""
+        }
+      },
+      "$path": "src/ServerScriptService"
+    },
+    "ServerStorage": {
+      "$properties": {
+        "SerializedOverrides": {
+          "BinaryString": ""
+        }
+      },
+      "$path": "src/ServerStorage"
+    },
+    "SoundService": {
+      "$properties": {
+        "DefaultListenerLocation": "Camera",
+        "RespectFilteringEnabled": true,
+        "SerializedOverrides": {
+          "BinaryString": ""
+        }
+      },
+      "$path": "src/SoundService"
+    },
+    "StarterGui": {
+      "$properties": {
+        "ScreenOrientation": "Sensor",
+        "SerializedOverrides": {
+          "BinaryString": ""
+        }
+      },
+      "$path": "src/StarterGui"
+    },
+    "StarterPack": {
+      "$properties": {
+        "SerializedOverrides": {
+          "BinaryString": ""
+        }
+      },
+      "$path": "src/StarterPack"
+    },
+    "StarterPlayer": {
+      "$properties": {
+        "AvatarJointUpgrade": "Enabled",
+        "CameraMaxZoomDistance": 128.0,
+        "CharacterBreakJointsOnDeath": false,
+        "CharacterJumpHeight": 40.128562927246094,
+        "GameSettingsAvatar": "R6",
+        "SerializedOverrides": {
+          "BinaryString": ""
+        },
+        "UseImprovedCharacterEvents": {
+          "Enum": 0
+        }
+      },
+      "$path": "src/StarterPlayer"
+    },
+    "Teams": {
+      "$properties": {
+        "SerializedOverrides": {
+          "BinaryString": ""
+        }
+      },
+      "$path": "src/Teams"
+    },
+    "TextChatService": {
+      "$properties": {
+        "ChatVersion": "TextChatService",
+        "IsLegacyChatDisabled": true,
+        "PlatformIntegratedChat": {
+          "Enum": 0
+        },
+        "SerializedOverrides": {
+          "BinaryString": ""
+        }
+      },
+      "$path": "src/TextChatService"
+    },
+    "Workspace": {
+      "$properties": {
+        "AutoSimulate": {
+          "Bool": true
+        },
+        "ExpandedTerrain": {
+          "Enum": 0
+        },
+        "GravityDirection": {
+          "Vector3": [
+            0.0,
+            -1.0,
+            0.0
+          ]
+        },
+        "MapTVRemoteToGamepadKeycodes": {
+          "Enum": 0
+        },
+        "PredictiveStreamingMode": {
+          "Enum": 0
+        },
+        "ReplicationFrequency": {
+          "Enum": 0
+        },
+        "ReplicationThroughput": {
+          "Enum": 0
+        },
+        "SerializedOverrides": {
+          "BinaryString": ""
+        },
+        "SignalBehavior": "Deferred",
+        "SimulationRate": {
+          "Float32": 1.0
+        },
+        "StreamOutBehavior": "Opportunistic",
+        "StreamingAdaptiveRadius": {
+          "Bool": false
+        },
+        "StreamingEnabled": true,
+        "StreamingIntegrityMode": "PauseOutsideLoadedArea",
+        "UseInputSink": {
+          "Enum": 0
+        },
+        "Wind": {
+          "Float32": 0.0
+        },
+        "WindDirection": {
+          "Vector3": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "WorldPivotData": {
+          "OptionalCFrame": {
+            "position": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "orientation": [
+              [
+                1.0,
+                0.0,
+                0.0
+              ],
+              [
+                0.0,
+                1.0,
+                0.0
+              ],
+              [
+                0.0,
+                0.0,
+                1.0
+              ]
+            ]
+          }
+        }
+      },
+      "$attributes": {
+        "Rojo_Id": "5bbe134af7c71db809f7067000002f7a",
+        "Rojo_Target_CurrentCamera": "5bbe134af7c71db809f706700000331e"
+      },
+      "$path": "src/Workspace"
+    }
+  }
+}
