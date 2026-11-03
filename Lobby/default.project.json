@@ -155,7 +155,16 @@
             0.0
           ]
         },
+        "InputSinkEnabled": {
+          "Enum": 0
+        },
         "MapTVRemoteToGamepadKeycodes": {
+          "Enum": 0
+        },
+        "NextGenerationPhysicsSolver": {
+          "Enum": 0
+        },
+        "ParticlesUseDynamicWind": {
           "Enum": 0
         },
         "PredictiveStreamingMode": {
