@@ -149,8 +149,6 @@ while true do
 		local blue = getPlayers(modeFolder.BluePad)
 		local red = getPlayers(modeFolder.RedPad)
 
-		print(modeName, "Blue:", #blue, "Red:", #red)
-
 		-- 🔥 RESET UI SOLO PARA LOS QUE NO ESTÁN EN ESTE MATCH
 		for _, player in ipairs(Players:GetPlayers()) do
 			local inBlue = table.find(blue, player)
