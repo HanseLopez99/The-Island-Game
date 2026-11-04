@@ -1,7 +1,13 @@
 {
   "properties": {
-    "ScreenInsets": "DeviceSafeInsets",
+    "SerializedOverrides": {
+      "BinaryString": ""
+    },
+    "InputSinkEnabled": {
+      "Enum": 0
+    },
     "Enabled": false,
+    "ScreenInsets": "DeviceSafeInsets",
     "ZIndexBehavior": "Sibling"
   },
   "className": "ScreenGui"

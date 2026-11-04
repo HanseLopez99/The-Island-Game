@@ -1,0 +1,11 @@
+{
+  "className": "ColorCorrectionEffect",
+  "properties": {
+    "Saturation": 0.20000000298023224,
+    "Contrast": 0.10000000149011612,
+    "Brightness": 0.03999999910593033,
+    "SerializedOverrides": {
+      "BinaryString": ""
+    }
+  }
+}

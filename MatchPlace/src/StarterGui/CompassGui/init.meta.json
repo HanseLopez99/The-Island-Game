@@ -1,5 +1,11 @@
 {
   "properties": {
+    "SerializedOverrides": {
+      "BinaryString": ""
+    },
+    "InputSinkEnabled": {
+      "Enum": 0
+    },
     "ScreenInsets": "DeviceSafeInsets",
     "ZIndexBehavior": "Sibling"
   },

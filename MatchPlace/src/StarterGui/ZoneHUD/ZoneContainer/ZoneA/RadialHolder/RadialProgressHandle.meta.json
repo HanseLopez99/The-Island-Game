@@ -1,9 +1,12 @@
 {
+  "ignoreUnknownInstances": true,
   "properties": {
+    "Sandboxed": true,
     "Capabilities": {
       "SecurityCapabilities": 17996771963439872
     },
-    "Sandboxed": true
-  },
-  "ignoreUnknownInstances": true
+    "SerializedOverrides": {
+      "BinaryString": ""
+    }
+  }
 }

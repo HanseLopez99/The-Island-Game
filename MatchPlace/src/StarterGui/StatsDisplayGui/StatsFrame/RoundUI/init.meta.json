@@ -1,5 +1,35 @@
 {
   "properties": {
+    "LayoutOrder": 2.0,
+    "SerializedOverrides": {
+      "BinaryString": ""
+    },
+    "BackgroundColor3": [
+      0.7490196228027344,
+      0.7490196228027344,
+      0.7490196228027344
+    ],
+    "BorderColor3": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "BorderSizePixel": 0.0,
+    "Position": {
+      "UDim2": [
+        [
+          0.5,
+          0
+        ],
+        [
+          0.02,
+          0
+        ]
+      ]
+    },
+    "Sink": {
+      "Enum": 0
+    },
     "Size": {
       "UDim2": [
         [
@@ -12,37 +42,10 @@
         ]
       ]
     },
-    "LayoutOrder": 2.0,
-    "BorderSizePixel": 0.0,
-    "Sink": {
-      "Enum": 0
-    },
-    "BorderColor3": [
-      0.0,
-      0.0,
-      0.0
-    ],
     "AnchorPoint": [
       0.5,
       0.0
-    ],
-    "BackgroundColor3": [
-      0.7490196228027344,
-      0.7490196228027344,
-      0.7490196228027344
-    ],
-    "Position": {
-      "UDim2": [
-        [
-          0.5,
-          0
-        ],
-        [
-          0.02,
-          0
-        ]
-      ]
-    }
+    ]
   },
   "className": "Frame"
 }

@@ -1,5 +1,11 @@
 {
   "properties": {
+    "InputSinkEnabled": {
+      "Enum": 0
+    },
+    "SerializedOverrides": {
+      "BinaryString": ""
+    },
     "ZIndexBehavior": "Sibling"
   },
   "className": "ScreenGui"

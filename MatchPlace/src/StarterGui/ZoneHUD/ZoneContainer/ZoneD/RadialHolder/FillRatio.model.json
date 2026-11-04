@@ -1,3 +1,8 @@
 {
-  "className": "DoubleConstrainedValue"
+  "className": "DoubleConstrainedValue",
+  "properties": {
+    "SerializedOverrides": {
+      "BinaryString": ""
+    }
+  }
 }

@@ -1,21 +1,18 @@
 {
   "properties": {
-    "Size": {
-      "UDim2": [
-        [
-          0.11343487,
-          0
-        ],
-        [
-          0.9625003,
-          0
-        ]
-      ]
+    "SerializedOverrides": {
+      "BinaryString": ""
     },
     "BackgroundColor3": [
       1.0,
       1.0,
       1.0
+    ],
+    "BackgroundTransparency": 1.0,
+    "BorderColor3": [
+      0.0,
+      0.0,
+      0.0
     ],
     "BorderSizePixel": 0.0,
     "Position": {
@@ -33,12 +30,18 @@
     "Sink": {
       "Enum": 0
     },
-    "BorderColor3": [
-      0.0,
-      0.0,
-      0.0
-    ],
-    "BackgroundTransparency": 1.0
+    "Size": {
+      "UDim2": [
+        [
+          0.11343487,
+          0
+        ],
+        [
+          0.9625003,
+          0
+        ]
+      ]
+    }
   },
   "className": "Frame"
 }

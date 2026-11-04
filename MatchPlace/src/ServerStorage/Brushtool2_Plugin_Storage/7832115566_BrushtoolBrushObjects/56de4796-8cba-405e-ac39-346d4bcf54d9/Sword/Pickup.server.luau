@@ -1,3 +1,12 @@
+--[[
+    Pickup (Script)
+    Path: ServerStorage → Brushtool2_Plugin_Storage → 7832115566_BrushtoolBrushObjects → {56de4796-8cba-405e-ac39-346d4bcf54d9} → Sword
+    Parent: Sword
+    Properties:
+        Disabled: false
+        RunContext: Enum.RunContext.Legacy
+    Exported: 2026-09-02 16:23:32
+]]
 local pickup = script.Parent
 local prompt = pickup:WaitForChild("ProximityPrompt")
 

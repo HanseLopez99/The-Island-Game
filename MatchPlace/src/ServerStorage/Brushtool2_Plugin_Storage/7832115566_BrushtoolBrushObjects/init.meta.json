@@ -1,3 +1,15 @@
 {
-  "ignoreUnknownInstances": true
+  "ignoreUnknownInstances": true,
+  "properties": {
+    "IconTint": {
+      "Color3": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "SerializedOverrides": {
+      "BinaryString": ""
+    }
+  }
 }
